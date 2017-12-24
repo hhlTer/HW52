@@ -13,6 +13,6 @@ public class Player6 extends ExtraPlayer {
         public void shuffle(){
             Collections.shuffle(playList);
             }
-        }
+}
 
 
