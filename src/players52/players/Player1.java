@@ -5,43 +5,92 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
 public class Player1 extends Player {
+    /**
+     * Button[] buttons
+     * масив базових кнопок (PLAY, STOP, CHANGE SONG, EXIT)
+     *
+     * ---- перенесу в суперклас
+     *
+     */
+    private Button[] buttons;
+
     public Player1(int price){
         super(price);
     }
-    public void playSong() {
-        playSongs(song1);
-    }
 
+    /**
+     * Щоб працювати з suRoot і не передавати кожного разу по всіх методах -
+     * зберігаю його, як поле в супер класі -Player-
+     */
     @Override
     public void show(Pane root) {
-        super.root = root;
+        super.suRoot = root;
         root.getChildren().clear();
-        Button[] buttons = playButton();
+        buttons = playButton();
         root.getChildren().addAll(buttons);
+//--------------------------------------------------
+//----------------- PLAY button --------------------
+//--------------------------------------------------
 
         buttons[0].setOnMouseClicked(event -> {
-            playSong();
+            playSongEvent();
         });
+//--------------------------------------------------
+//----------------- STOP button --------------------
+//--------------------------------------------------
         buttons[1].setOnMouseClicked(event -> {
             stopSongs();
         });
+//--------------------------------------------------
+//----------------- SET SONG button ----------------
+//--------------------------------------------------
         buttons[2].setOnMouseClicked(event -> {
-            showSetSongDialog(root);
+            showSetSongEvent();
+        });
+//--------------------------------------------------
+//----------------- STOP button --------------------
+//--------------------------------------------------
+        buttons[3].setOnMouseClicked(event -> {
+            root.getChildren().removeAll();
+            System.exit(0);
         });
     }
 
-    private void showSetSongDialog(Pane root){
+    /**
+     * playSongEvent - проміжний метод між PLAY кнопкою,
+     * та викликом методу програвання пісні -playSongs-
+     * який може викликатись іншими методами
+     */
+    private void playSongEvent(){
+        playSong();
+    }
+    public void playSong() {
+        super.playSongs(song1);
+    }
+
+    /**
+     * Зміна пісні
+     */
+    private void showSetSongEvent(){
         Button setSongButton = new Button("Set song");
         setSongButton.setLayoutX(20);
         setSongButton.setLayoutY(50);
         TextField textField = new TextField();
-        textField.setLayoutX(90);
+        textField.setLayoutX(110);
         textField.setLayoutY(50);
+        for (int i = 0; i < 3; i++) {
+            buttons[i].setDisable(true);
+        }
+
         setSongButton.setOnMouseClicked(event -> {
             setSong(textField.getText());
-            root.getChildren().removeAll(textField,setSongButton);
+            suRoot.getChildren().removeAll(textField,setSongButton);
+            for (int i = 0; i < 3; i++) {
+                buttons[i].setDisable(false);
+            }
         });
-        root.getChildren().addAll(textField,setSongButton);
+
+        suRoot.getChildren().addAll(textField,setSongButton);
     }
 
 }

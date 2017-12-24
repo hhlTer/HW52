@@ -3,12 +3,13 @@ package players52.players;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
+
 import java.util.Arrays;
 import java.util.List;
 
 public abstract class Player {
-    Pane root;
+
+    Pane suRoot;
 
     /**
      * Constructor set private final field -price-
@@ -18,7 +19,7 @@ public abstract class Player {
     Player(int price) {
         this.price = price;
     }
-    public int getPrice(){return price;};
+    public int getPrice(){return price;}
 
     /**
      * one song
@@ -43,28 +44,39 @@ public abstract class Player {
 
     private Text textSong;
     void playSongs(String song){
+        if (textSong != null) {
+            if (textSong.getText().equals(song))
+            return;
+            else suRoot.getChildren().remove(textSong);
+        }
         textSong = new Text("Playing: " + song);
         textSong.setLayoutX(100);
         textSong.setLayoutY(150);
-        root.getChildren().setAll(textSong);
+        suRoot.getChildren().add(textSong);
     }
     void stopSongs(){
-        root.getChildren().removeAll(textSong);
+        suRoot.getChildren().removeAll(textSong);
+        textSong = null;
     }
 
     /**
      * Base players have play button
+     *                   stop button
+     *                   set song button
      */
     Button[] playButton(){
         Button[] buttons = {
             new Button("Play"),
             new Button("Stop"),
-            new Button("Set song")
+            new Button("Set song"),
+            new Button("Exit")
         };
 
         for (int i = 0; i < buttons.length; i++) {
+            double a = 10;
             buttons[i].setLayoutY(20);
-            buttons[i].setLayoutX(i*70 + 20);
+            if (i > 0) a = buttons[i-1].getLayoutX() + buttons[i-1].getText().length()*14;
+            buttons[i].setLayoutX(a);
         }
         return buttons;
     }
