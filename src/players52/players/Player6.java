@@ -1,5 +1,7 @@
 package players52.players;
 
+import javafx.scene.layout.Pane;
+
 import java.util.Collections;
 
 public class Player6 extends ExtraPlayer {
@@ -10,9 +12,15 @@ public class Player6 extends ExtraPlayer {
         public void playSong() {
             playSongs(playList.get(0));
         }
-        public void shuffle(){
+
+    @Override
+    public void show(Pane root) {
+
+    }
+    public void shuffle(){
             Collections.shuffle(playList);
             }
+
 }
 
 
