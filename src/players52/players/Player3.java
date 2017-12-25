@@ -10,8 +10,4 @@ public class Player3 extends ExtraPlayer {
         playSongs(playList.get(0));
     }
 
-    @Override
-    public void show(Pane root) {
-
-    }
 }

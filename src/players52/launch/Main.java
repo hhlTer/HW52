@@ -124,9 +124,21 @@ public class Main extends Application{
         button.setOnMouseClicked(event -> {
             if (group.getSelectedToggle() != null) {
                 RadioButton butt = (RadioButton) group.getSelectedToggle();
-                if (butt.getText().equals("Player 1")) {
-                    new Player1(150).show(root);
+                switch (Integer.parseInt(butt.getText().substring(butt.getText().length() - 1))){
+                    case 1:
+                        new Player1(150).show(root);
+                    case 2:
+                        new Player2(150).show(root);
+                    case 3:
+                        new Player3(150).show(root);
                 }
+//                if (butt.getText().equals("Player 1")) {
+//                    new Player1(150).show(root);
+//                }
+//                if (butt.getText().equals("Player 2")) {
+//                    new Player2(150).show(root);
+//                }
+
             }
         });
 

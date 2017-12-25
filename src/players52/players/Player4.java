@@ -11,8 +11,4 @@ public class Player4 extends ExtraPlayer {
         playSongs(playList.get(playList.size() - 1));
     }
 
-    @Override
-    public void show(Pane root) {
-
-    }
 }

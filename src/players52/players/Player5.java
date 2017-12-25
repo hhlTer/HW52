@@ -13,11 +13,6 @@ public class Player5 extends ExtraPlayer {
     }
 
     @Override
-    public void show(Pane root) {
-
-    }
-
-    @Override
     public void playAllSongs(){
         Collections.reverse(playList);
         playSongs(playList);

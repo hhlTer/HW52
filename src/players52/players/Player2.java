@@ -8,11 +8,7 @@ public class Player2 extends Player {
         super(price);
     }
     public void playSong() {
-        System.out.println("error");
+        super.playSongs("ERROR");
     }
 
-    @Override
-    public void show(Pane root) {
-
-    }
 }

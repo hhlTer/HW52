@@ -13,10 +13,6 @@ public class Player6 extends ExtraPlayer {
             playSongs(playList.get(0));
         }
 
-    @Override
-    public void show(Pane root) {
-
-    }
     public void shuffle(){
             Collections.shuffle(playList);
             }
