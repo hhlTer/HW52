@@ -41,7 +41,6 @@ public abstract class ExtraPlayer extends Player{
         String s = "";
         for (String song:
                 playList) {
-            System.out.println(song);
             s += song + " ";
         }
         setSong(s);
