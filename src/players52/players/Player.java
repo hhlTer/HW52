@@ -59,15 +59,13 @@ public abstract class Player {
      */
     private final Button PLAY = new Button("PLAY");
     private final Button STOP = new Button("STOP");
-    private final Button CHANGE = new Button("CHANGE SONG");
+    final Button CHANGE = new Button("CHANGE SONG");
     private final Button EXIT = new Button("EXIT");
-    private final Button BACK = new Button("BACK");
     void initButton(){
         addButtonTolist(PLAY, 10, 20);
         addButtonTolist(STOP, 70, 20);
         addButtonTolist(CHANGE, 130, 20);
         addButtonTolist(EXIT, 255, 20);
-        addButtonTolist(BACK, 255, 50);
     }
     private void addButtonTolist(Button button, double x, double y){
         button.setLayoutX(x);
@@ -80,12 +78,10 @@ public abstract class Player {
      * зберігаю його, як поле в супер класі -Player-
      */
     Pane suRoot;
-    Pane mainRoot;
 
     private List<Button> buttons = new ArrayList<>();
     public void show(Pane root) {
         this.suRoot = root;
-        this.mainRoot = root;
         root.getChildren().clear();
         initButton();
         root.getChildren().addAll(buttons);
@@ -118,13 +114,6 @@ public abstract class Player {
             suRoot.getChildren().removeAll();
             System.exit(0);
         });
-//--------------------------------------------------
-//----------------- BACK button --------------------
-//--------------------------------------------------
-        BACK.setOnMouseClicked(event -> {
-//            suRoot.getChildren().removeAll();
-        });
-
     }
 
     /**

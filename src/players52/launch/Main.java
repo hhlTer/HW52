@@ -8,89 +8,24 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.media.AudioClip;
 import players52.players.*;
 
-import java.awt.*;
-import java.util.List;
-
 public class Main extends Application{
-    private final int HEIGHT = 800;
-    private final int WIDTH = 600;
+    private final int MAIN_HEIGHT = 800;
+    private final int MAIN_WIDTH = 600;
+    private final int HEIGHT = 200;
+    private final int WIDTH = 300;
 
     public static void main(String[] args) {
         launch(args);
-
-
-        Player player1 = new Player1(200);
-        System.out.println("Player 1");
-        player1.playSong();
-
-        Player player2 = new Player2(50);
-        System.out.println("Player 2");
-        player2.playSong();
-
-        ExtraPlayer player3 = new Player3(500);
-        System.out.println("Player 3");
-        player3.playSong();
-        System.out.println("\n   Play all song:");
-        player3.playAllSongs();
-
-        ExtraPlayer player4 = new Player4(700);
-        System.out.println("Player 4");
-        player4.playSong();
-        System.out.println("\n   Play all song:");
-        player4.playAllSongs();
-
-        ExtraPlayer player5 = new Player5(1000);
-        System.out.println("Player 5");
-        player5.playSong();
-        System.out.println("\n   Play all song:");
-        player5.playAllSongs();
-
-        Player6 player6 = new Player6(1500);
-        System.out.println("Player 6");
-        player6.playSong();
-        System.out.println("\n   Play all song:");
-        player6.playAllSongs();
-        System.out.println("\n   Play all shuffle song:");
-        player6.shuffle();
-        player6.playAllSongs();
-
-
-
     }
     @Override
     public void start(Stage primaryStage) {
 
         windowProperty(primaryStage);
-        Pane root = new Pane();
-        Player player = choosePlayer(root);
-//        player.show(root);
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-
-    private void windowProperty(Stage primaryStage){
-        primaryStage.setWidth(WIDTH);
-        primaryStage.setHeight(HEIGHT);
-        primaryStage.setMaxHeight(HEIGHT);
-        primaryStage.setMaxWidth(WIDTH);
-        primaryStage.setMinHeight(HEIGHT);
-        primaryStage.setMinWidth(WIDTH);
-    }
-
-    private Player choosePlayer(Pane root){
-        Player player = new Player1(100);
-
 /*-----------------------------------------------------
  * --------------------- Buttons ----------------------
  * ----------------------------------------------------
@@ -120,31 +55,62 @@ public class Main extends Application{
         Text text = new Text();
         text.setTranslateX(100);
         text.setTranslateY(100);
-
-        button.setOnMouseClicked(event -> {
+/*
+ *  launch secondary window ---- Player ------
+ */
+        button.setOnAction(event -> {
+            Pane secondPane = new Pane();
             if (group.getSelectedToggle() != null) {
                 RadioButton butt = (RadioButton) group.getSelectedToggle();
                 switch (Integer.parseInt(butt.getText().substring(butt.getText().length() - 1))){
                     case 1:
-                        new Player1(150).show(root);
+                        new Player1(150).show(secondPane);
+                        break;
                     case 2:
-                        new Player2(150).show(root);
+                        new Player2(50).show(secondPane);
+                        break;
                     case 3:
-                        new Player3(150).show(root);
+                        new Player3(350).show(secondPane);
+                        break;
+                    case 4:
+                        new Player4(750).show(secondPane);
+                        break;
+                    case 5:
+                        new Player5(800).show(secondPane);
+                        break;
+                    case 6:
+                        new Player6(1000).show(secondPane);
+                        break;
                 }
-//                if (butt.getText().equals("Player 1")) {
-//                    new Player1(150).show(root);
-//                }
-//                if (butt.getText().equals("Player 2")) {
-//                    new Player2(150).show(root);
-//                }
-
             }
+
+            Scene secondScene = new Scene(secondPane, MAIN_WIDTH,MAIN_HEIGHT);
+            Stage newWindow = new Stage();
+            newWindow.initModality(Modality.APPLICATION_MODAL);
+            newWindow.setScene(secondScene);
+            newWindow.setX(primaryStage.getX() + 200);
+            newWindow.show();
         });
 
-
+        Pane root = new Pane();
         root.getChildren().addAll(radioButtons);
         root.getChildren().addAll(button, text);
-        return player;
+
+//        player.show(root);
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private void windowProperty(Stage primaryStage){
+        primaryStage.setWidth(WIDTH);
+        primaryStage.setHeight(HEIGHT);
+        primaryStage.setMaxHeight(HEIGHT);
+        primaryStage.setMaxWidth(WIDTH);
+        primaryStage.setMinHeight(HEIGHT);
+        primaryStage.setMinWidth(WIDTH);
+    }
+
+    private void choosePlayer(Pane root){
     }
 }

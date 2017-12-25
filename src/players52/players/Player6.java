@@ -4,7 +4,7 @@ import javafx.scene.layout.Pane;
 
 import java.util.Collections;
 
-public class Player6 extends ExtraPlayer {
+public class Player6 extends ExtraPlusPlayer {
 
         public Player6(int price){
             super(price);
