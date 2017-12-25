@@ -33,7 +33,7 @@ public class Player1 extends Player {
 //--------------------------------------------------
 
         buttons[0].setOnMouseClicked(event -> {
-            playSongEvent();
+            playSong();
         });
 //--------------------------------------------------
 //----------------- STOP button --------------------
@@ -57,13 +57,7 @@ public class Player1 extends Player {
     }
 
     /**
-     * playSongEvent - проміжний метод між PLAY кнопкою,
-     * та викликом методу програвання пісні -playSongs-
-     * який може викликатись іншими методами
      */
-    private void playSongEvent(){
-        playSong();
-    }
     public void playSong() {
         super.playSongs(song1);
     }
