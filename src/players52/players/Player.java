@@ -4,8 +4,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import players52.launch.Main;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class Player {
@@ -29,8 +32,8 @@ public abstract class Player {
      *
      */
 
-    String song1 = "One song";
-    private void setSong(String song){
+    private String song1 = "Default song";
+    void setSong(String song){
         song1 = song;
     }
 
@@ -54,21 +57,22 @@ public abstract class Player {
      *                   CHANGE song button
      *                   EXIT
      */
-    private Button[] playButton(){
-        Button[] buttons = {
-            new Button("PLAY"),
-            new Button("STOP"),
-            new Button("Change song"),
-            new Button("Exit")
-        };
-
-        for (int i = 0; i < buttons.length; i++) {
-            double a = 10;
-            buttons[i].setLayoutY(20);
-            if (i > 0) a = buttons[i-1].getLayoutX() + buttons[i-1].getText().length()*14;
-            buttons[i].setLayoutX(a);
-        }
-        return buttons;
+    private final Button PLAY = new Button("PLAY");
+    private final Button STOP = new Button("STOP");
+    private final Button CHANGE = new Button("CHANGE SONG");
+    private final Button EXIT = new Button("EXIT");
+    private final Button BACK = new Button("BACK");
+    void initButton(){
+        addButtonTolist(PLAY, 10, 20);
+        addButtonTolist(STOP, 70, 20);
+        addButtonTolist(CHANGE, 130, 20);
+        addButtonTolist(EXIT, 255, 20);
+        addButtonTolist(BACK, 255, 50);
+    }
+    private void addButtonTolist(Button button, double x, double y){
+        button.setLayoutX(x);
+        button.setLayoutY(y);
+        buttons.add(button);
     }
 
     /**
@@ -76,38 +80,51 @@ public abstract class Player {
      * зберігаю його, як поле в супер класі -Player-
      */
     Pane suRoot;
-    Button[] buttons;
+    Pane mainRoot;
+
+    private List<Button> buttons = new ArrayList<>();
     public void show(Pane root) {
         this.suRoot = root;
+        this.mainRoot = root;
         root.getChildren().clear();
-        buttons = playButton();
+        initButton();
         root.getChildren().addAll(buttons);
+        eventButton();
+    }
+    private void eventButton() {
 //--------------------------------------------------
 //----------------- PLAY button --------------------
 //--------------------------------------------------
 
-        buttons[0].setOnMouseClicked(event -> {
+        PLAY.setOnMouseClicked(event -> {
             playSong();
         });
 //--------------------------------------------------
 //----------------- STOP button --------------------
 //--------------------------------------------------
-        buttons[1].setOnMouseClicked(event -> {
+        STOP.setOnMouseClicked(event -> {
             stopSongs();
         });
 //--------------------------------------------------
 //-------------- CHANGE SONG button ----------------
 //--------------------------------------------------
-        buttons[2].setOnMouseClicked(event -> {
+        CHANGE.setOnMouseClicked(event -> {
             showSetSongEvent();
         });
 //--------------------------------------------------
 //----------------- EXIT button --------------------
 //--------------------------------------------------
-        buttons[3].setOnMouseClicked(event -> {
-            root.getChildren().removeAll();
+        EXIT.setOnMouseClicked(event -> {
+            suRoot.getChildren().removeAll();
             System.exit(0);
         });
+//--------------------------------------------------
+//----------------- BACK button --------------------
+//--------------------------------------------------
+        BACK.setOnMouseClicked(event -> {
+//            suRoot.getChildren().removeAll();
+        });
+
     }
 
     /**
@@ -115,16 +132,21 @@ public abstract class Player {
      * викликається абстрактним методом playSong() з класів - нащадків
      */
     private Text textSong;
-    void playSongs(String song){
-        if (textSong != null) {
-            if (textSong.getText().equals(song))
-                return;
-            else suRoot.getChildren().remove(textSong);
+    void playSongs(){
+        if (song1 == null) song1 = "ERROR";
+        try {
+            if (textSong != null) {
+                if (textSong.getText().equals(song1))
+                    return;
+                else suRoot.getChildren().remove(textSong);
+            }
+            textSong = new Text("Playing: " + song1);
+            textSong.setLayoutX(100);
+            textSong.setLayoutY(150);
+            suRoot.getChildren().add(textSong);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        textSong = new Text("Playing: " + song);
-        textSong.setLayoutX(100);
-        textSong.setLayoutY(150);
-        suRoot.getChildren().add(textSong);
     }
 
     /**
@@ -144,17 +166,18 @@ public abstract class Player {
         TextField textField = new TextField();
         textField.setLayoutX(110);
         textField.setLayoutY(50);
-        for (int i = 0; i < 3; i++) {
-            buttons[i].setDisable(true);
+        for (Button b:
+             buttons) {
+            b.setDisable(true);
         }
 
         setSongButton.setOnMouseClicked(event -> {
             setSong(textField.getText());
             suRoot.getChildren().removeAll(textField,setSongButton);
-            for (int i = 0; i < 3; i++) {
-                buttons[i].setDisable(false);
-            }
-        });
+            for (Button b:
+                    buttons) {
+                b.setDisable(false);
+            }        });
 
         suRoot.getChildren().addAll(textField,setSongButton);
     }

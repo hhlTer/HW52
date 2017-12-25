@@ -9,8 +9,15 @@ public class Player6 extends ExtraPlayer {
         public Player6(int price){
             super(price);
         }
-        public void playSong() {
-            playSongs(playList.get(0));
+
+    @Override
+    public void playAllSongs() {
+        playSongs(playList);
+    }
+
+    public void playSong() {
+            setSong(playList.get(0));
+            playSongs();
         }
 
     public void shuffle(){

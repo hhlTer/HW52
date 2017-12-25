@@ -11,7 +11,7 @@ public class Player1 extends Player {
     }
 
     public void playSong() {
-        super.playSongs(song1);
+        super.playSongs();
     }
 
 

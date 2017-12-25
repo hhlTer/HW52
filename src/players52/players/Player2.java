@@ -8,7 +8,8 @@ public class Player2 extends Player {
         super(price);
     }
     public void playSong() {
-        super.playSongs("ERROR");
+        setSong(null);
+        super.playSongs();
     }
 
 }
