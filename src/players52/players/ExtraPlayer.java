@@ -2,6 +2,8 @@ package players52.players;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+
 import java.util.List;
 
 /**
@@ -32,16 +34,15 @@ public abstract class ExtraPlayer extends Player{
     }
 
     public void show(Pane root){
-        super.show(root);
-        PLAY_ALL.setOnMouseClicked(event -> {
-            playAllSongs();
-        });
+        super.show(root, new Stage());
+        PLAY_ALL.setOnMouseClicked(event -> playAllSongs());
     }
+
     void playSongs(List<String> playList){
         String s = "";
         for (String song:
                 playList) {
-            s += song + " ";
+            s = s + song + " ";
         }
         setSong(s);
         playSongs();

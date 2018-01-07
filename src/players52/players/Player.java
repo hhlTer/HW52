@@ -1,11 +1,17 @@
 package players52.players;
 
+import javafx.event.Event;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import players52.launch.Main;
+import players52.music.PlayingMP3;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,9 +38,10 @@ public abstract class Player {
      *
      */
 
-    private String song1 = "Default song";
-    void setSong(String song){
-        song1 = song;
+    private String song1 = "Please load song";
+    void setSong(String song) throws NullPointerException{
+        if (song == null) throw new NullPointerException();
+        setMP3File(new File(song));
     }
 
     /**
@@ -76,11 +83,14 @@ public abstract class Player {
     /**
      * Щоб працювати з suRoot і не передавати кожного разу по всіх методах -
      * зберігаю його, як поле в супер класі -Player-
+     * @param suStage - для діалогового вікна відкриття файлу
      */
-    Pane suRoot;
 
+    Pane suRoot;
+    private Stage suStage;
     private List<Button> buttons = new ArrayList<>();
-    public void show(Pane root) {
+
+    public void show(Pane root, Stage suStage) {
         this.suRoot = root;
         root.getChildren().clear();
         initButton();
@@ -92,21 +102,15 @@ public abstract class Player {
 //----------------- PLAY button --------------------
 //--------------------------------------------------
 
-        PLAY.setOnMouseClicked(event -> {
-            playSong();
-        });
+        PLAY.setOnMouseClicked(event -> playSong());
 //--------------------------------------------------
 //----------------- STOP button --------------------
 //--------------------------------------------------
-        STOP.setOnMouseClicked(event -> {
-            stopSongs();
-        });
+        STOP.setOnMouseClicked(event -> stopSongs());
 //--------------------------------------------------
 //-------------- CHANGE SONG button ----------------
 //--------------------------------------------------
-        CHANGE.setOnMouseClicked(event -> {
-            showSetSongEvent();
-        });
+        CHANGE.setOnMouseClicked(event -> showSetSongEvent());
 //--------------------------------------------------
 //----------------- EXIT button --------------------
 //--------------------------------------------------
@@ -117,10 +121,30 @@ public abstract class Player {
     }
 
     /**
+     * File mp3File
+     * using setter setMP3File, which set and
+     *  - mp3File
+     * and
+     *  - song1
+     */
+
+    private File mp3File;
+
+    private void setMP3File(File file){
+        if (file.exists()){
+            this.mp3File = file;
+            this.song1 = file.getName();
+        }
+    }
+
+    /**
      * PLAY
      * викликається абстрактним методом playSong() з класів - нащадків
      */
     private Text textSong;
+    private MediaPlayer mediaPlayer;
+    private static PlayingMP3 playingMP3 = new PlayingMP3();
+
     void playSongs(){
         if (song1 == null) song1 = "ERROR";
         try {
@@ -133,6 +157,12 @@ public abstract class Player {
             textSong.setLayoutX(100);
             textSong.setLayoutY(150);
             suRoot.getChildren().add(textSong);
+
+            //MP3
+                if (!mediaPlayer.isMute()) mediaPlayer.stop();
+            playingMP3.setFileMP3(mp3File);
+            mediaPlayer = playingMP3.playFile();
+            mediaPlayer.play();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -144,31 +174,88 @@ public abstract class Player {
     private void stopSongs(){
         suRoot.getChildren().removeAll(textSong);
         textSong = null;
+        if (mediaPlayer != null && !mediaPlayer.isMute()) mediaPlayer.stop();
     }
     /**
-     * Change
+     * CHANGE
      */
+    private TextField textField = new TextField();
+
     private void showSetSongEvent(){
-        Button setSongButton = new Button("Set song");
+        Button setSongButton = new Button("Set song"); //-- SET SONG BUTTON
         setSongButton.setLayoutX(20);
         setSongButton.setLayoutY(50);
-        TextField textField = new TextField();
+
+        Button setBackButton = new Button("Back"); //-- BACK BUTTON
+        setBackButton.setLayoutX(20);
+        setBackButton.setLayoutY(80);
+
+        Button openButton = new Button("Open"); //-- OPEN BUTTON
+        openButton.setLayoutX(20);
+        openButton.setLayoutY(110);
+
+
+//        TextField textField = new TextField();
         textField.setLayoutX(110);
         textField.setLayoutY(50);
         for (Button b:
              buttons) {
             b.setDisable(true);
         }
-
+//---------------------------------------------------------
+//------------------- SET SONG BUTTON ---------------------
+//---------------------------------------------------------
         setSongButton.setOnMouseClicked(event -> {
             setSong(textField.getText());
-            suRoot.getChildren().removeAll(textField,setSongButton);
+            suRoot.getChildren().removeAll(textField, setSongButton, setBackButton, openButton);
+            for (Button b:
+                    buttons) {
+                b.setDisable(false);
+            }
+            playSong();
+        });
+
+//---------------------------------------------------------
+//--------------------- BACK BUTTON -----------------------
+//---------------------------------------------------------
+
+        setBackButton.setOnMouseClicked(event -> {
+            suRoot.getChildren().removeAll(textField, setSongButton, setBackButton);
             for (Button b:
                     buttons) {
                 b.setDisable(false);
             }        });
 
-        suRoot.getChildren().addAll(textField,setSongButton);
+
+//---------------------------------------------------------
+//--------------------- OPEN BUTTON -----------------------
+//---------------------------------------------------------
+        openButton.setOnMouseClicked(event -> {
+            openFile();
+
+//            suRoot.getChildren().removeAll(textField, setSongButton, setBackButton);
+//            for (Button b:
+//                    buttons) {
+//                b.setDisable(false);
+//            }
+        });
+
+        suRoot.getChildren().addAll(textField, setSongButton, setBackButton, openButton);
+    }
+
+    private void openFile(){
+        FileChooser fileChooser = new FileChooser();//Класс работы с диалогом выборки и сохранения
+        fileChooser.setTitle("Open Document");//Заголовок диалога
+        FileChooser.ExtensionFilter extFilter =
+                new FileChooser.ExtensionFilter("MP3 files (*.mp3)", "*.mp3");//Расширение
+        fileChooser.getExtensionFilters().add(extFilter);
+        textField.setText(fileChooser.showOpenDialog(suStage).toString());//Указываем текущую сцену CodeNote.mainStage
+//        setMP3File(fileChooser.showOpenDialog(suStage));//Указываем текущую сцену CodeNote.mainStage
+//        File file = fileChooser.showOpenDialog(CodeNote.mainStage);//Указываем текущую сцену CodeNote.mainStage
+        if (mp3File != null) {
+            //Open
+            System.out.println("Процесс открытия файла");
+        }
     }
 
 
